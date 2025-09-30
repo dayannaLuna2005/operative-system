@@ -903,12 +903,13 @@ function ws_save(){
   localStorage.setItem(WS_KEYS.css, c);
   localStorage.setItem(WS_KEYS.js, j);
   console.info('Workspace guardado');
-}/*
+}
+  /*
 function ws_buildDoc() {
   const h = document.getElementById('ws-html')?.value || '';
   const c = document.getElementById('ws-css')?.value || '';
   const j = document.getElementById('ws-js')?.value || '';
- return `<!doctype html><html><head><meta charset="utf-8"><style>${c}</style></head><body>${h}<script>try{${j}}catch(e){document.body.insertAdjacentHTML('beforeend','<pre style="color:red;">Error: '+String(e)+'</pre>')}</script></body></html>`;
+ 
 */
 function ws_buildDoc() {
   // Obtiene el contenido de HTML, CSS y JS desde los elementos correspondientes
