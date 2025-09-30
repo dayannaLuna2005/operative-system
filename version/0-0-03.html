@@ -1,6 +1,4 @@
-### index.html
 
-```html
 <!doctype html>
 <html lang="es">
 <head>
@@ -910,8 +908,11 @@ function ws_buildDoc() {
   const h = document.getElementById('ws-html')?.value || '';
   const c = document.getElementById('ws-css')?.value || '';
   const j = document.getElementById('ws-js')?.value || '';
-  return `<!doctype html><html><head><meta charset="utf-8"><style>${c}</style></head><body>${h}<script>try{${j}}catch(e){document.body.insertAdjacentHTML('beforeend','<pre style="color:red;">Error: '+String(e)+'</pre>');}</script></body></html>`;
-}
+  return `<!doctype html><html><head><meta charset="utf-8"><style>${c}</style></head><body>${h}<script>try{${j}}catch(e){document.body.insertAdjacentHTML('beforeend','<pre style="color:red;">Error: '+String(e)+'</pre>');}</script></body></html>` ;
+} }
+
+
+<script>
 function ws_preview(){
   const frame = document.getElementById('ws-preview-frame');
   if (!frame) return;
@@ -933,6 +934,7 @@ function ws_reset() {
   document.getElementById('ws-html').value=''; document.getElementById('ws-css').value=''; document.getElementById('ws-js').value='';
   ws_preview();
 }
+  
 window.abrirWorkspace = abrirWorkspace;
 window.ws_save = ws_save;
 window.ws_preview = ws_preview;
@@ -949,7 +951,7 @@ window.MI_OS_FUNCS = {
 </script>
 </body>
 </html>
-```
+
 
 ---
 
