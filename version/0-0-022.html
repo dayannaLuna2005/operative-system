@@ -1081,7 +1081,9 @@ if (window.crearVentana && window.crearVentana._wrapped !== true) {
 }
 
 
-  /* Workspace: crea ventana, persistencia y preview */
+    
+///### 3) JavaScript (añadir a OS.js — funciones del workspace)```js
+/* Workspace: crea ventana, persistencia y preview */
 const WS_KEYS = { html: 'ws_html_v1', css: 'ws_css_v1', js: 'ws_js_v1' };
 
 function abrirWorkspace(){
@@ -1094,7 +1096,7 @@ function abrirWorkspace(){
       <div class="workspace-editor">
         <div class="editor-col">
           <label style="font-weight:600">HTML</label>
-          <textarea id="ws-html" placeholder="<!-- HTML -->"></textarea>
+          <textarea id="ws-html" placeholder="<!-- HTML -- ->"></textarea>
         </div>
         <div class="editor-col">
           <label style="font-weight:600">CSS</label>
@@ -1127,7 +1129,7 @@ function abrirWorkspace(){
   registerWindowForTaskbar(win, { title: 'Workspace', icon: '🧩' });
 
   // cargar desde storage en los textareas
-  const h = localStorage.getItem(WS_KEYS.html) || '<!-- HTML -->\\n<div id="app">Hola Workspace</div>';
+  const h = localStorage.getItem(WS_KEYS.html) || '<!-- HTML ---- >\\n<div id="app">Hola Workspace</div>';
   const c = localStorage.getItem(WS_KEYS.css)  || 'body{background:transparent} #app{padding:12px;color:#042}';
   const j = localStorage.getItem(WS_KEYS.js)   || 'console.log("Workspace ready");';
 
@@ -1169,7 +1171,9 @@ function ws_buildDoc() {
   const c = document.getElementById('ws-css')?.value || '';
   const j = document.getElementById('ws-js')?.value || '';
   // envolvemos en HTML seguro
-  return `<!doctype html><html><head>
+  return `<!doctype html>
+<html>
+<head>
 <meta charset="utf-8">
 <style>${c}</style>
 </head>
@@ -1183,7 +1187,6 @@ ${j}
 </body>
 </html>`;
 }
-
 
 // renderiza en el iframe sandbox (srcdoc)
 function ws_preview(){
@@ -1231,7 +1234,6 @@ window.ws_save = ws_save;
 window.ws_preview = ws_preview;
 window.ws_openPopup = ws_openPopup;
 window.ws_reset = ws_reset;
-
 
    </script>
 </body>
