@@ -903,15 +903,54 @@ function ws_save(){
   localStorage.setItem(WS_KEYS.css, c);
   localStorage.setItem(WS_KEYS.js, j);
   console.info('Workspace guardado');
-}
+}/*
 function ws_buildDoc() {
   const h = document.getElementById('ws-html')?.value || '';
   const c = document.getElementById('ws-css')?.value || '';
   const j = document.getElementById('ws-js')?.value || '';
-  return `<!doctype html><html><head><meta charset="utf-8"><style>${c}</style></head><body>${h}<script>try{${j}}catch(e){document.body.insertAdjacentHTML('beforeend','<pre style="color:red;">Error: '+String(e)+'</pre>')}</script></body></html>`` ;
+ return `<!doctype html><html><head><meta charset="utf-8"><style>${c}</style></head><body>${h}<script>try{${j}}catch(e){document.body.insertAdjacentHTML('beforeend','<pre style="color:red;">Error: '+String(e)+'</pre>')}</script></body></html>`;
+*/
+function ws_buildDoc() {
+  // Obtiene el contenido de HTML, CSS y JS desde los elementos correspondientes
+  const h = document.getElementById('ws-html')?.value || '';
+  const c = document.getElementById('ws-css')?.value || '';
+  const j = document.getElementById('ws-js')?.value || '';
+  
+  // Construye un documento HTML completo, con manejo de errores en el código JS
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>${c}</style>
+  </head>
+  <body>
+    ${h}
+    <script>
+      try {
+        ${j}
+      } catch(e) {
+        document.body.insertAdjacentHTML('beforeend', '<pre style="color:red;">Error: ' + String(e) + '</pre>');
+      }
+    <\/script>
+  </body>
+</html>`;
 }
-</script>
-<script>
+
+function ws_preview() {
+  const frame = document.getElementById('ws-preview-frame');
+  if (!frame) return;
+  const doc = ws_buildDoc();
+  try {
+    frame.srcdoc = doc; // Uso moderno y seguro para iframes
+  } catch (e) {
+    // Fallback para navegadores que no soportan srcdoc
+    const blob = new Blob([doc], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    frame.src = url;
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  }
+}
+
 
 function ws_preview(){
   const frame = document.getElementById('ws-preview-frame');
