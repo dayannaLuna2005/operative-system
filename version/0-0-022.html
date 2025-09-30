@@ -224,7 +224,7 @@ Si quieres, te pego ahora:
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mi OS Web — Kit Completo</title>
+  <title>OS add workspace</title>
   <!---
   <link rel="stylesheet" href="OS.css" />
   <script defer src="OS.js"></script>
@@ -1169,9 +1169,7 @@ function ws_buildDoc() {
   const c = document.getElementById('ws-css')?.value || '';
   const j = document.getElementById('ws-js')?.value || '';
   // envolvemos en HTML seguro
-  return `<!doctype html>
-<html>
-<head>
+  return `<!doctype html><html><head>
 <meta charset="utf-8">
 <style>${c}</style>
 </head>
@@ -1185,8 +1183,7 @@ ${j}
 </body>
 </html>`;
 }
-</script>
-<script>
+
 
 // renderiza en el iframe sandbox (srcdoc)
 function ws_preview(){
