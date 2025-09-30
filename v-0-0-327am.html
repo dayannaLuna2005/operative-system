@@ -1,3 +1,4 @@
+<!-----
 ### Problemas comunes que rompen el arrastre
 
 - Funciones renombradas entre versiones (por ejemplo `arrastrarVentana` vs `startDrag`) y los atributos inline no coinciden con el nombre real de la función.  
@@ -26,7 +27,8 @@
 
 ### Reemplaza tu lógica de arrastre por este bloque (copiar en OS.js)
 
-```js
+```js-------->
+
 // Drag universal (Pointer Events)
 let dragData = null;
 
@@ -80,12 +82,9 @@ window.startDrag = startDrag;
 .ventana { position: absolute; left: 100px; top: 100px; }
 .topbar { cursor: grab; touch-action: none; user-select: none; -webkit-user-drag: none; }
 .topbar:active { cursor: grabbing; }
-```
 
----
-
+<!---
 ### Integración con tu código existente
-
 - Si antes usabas `arrastrarVentana(event, 'id')`, reemplaza los atributos HTML por `onpointerdown="startDrag(event,'id')"` o renombra la función para mantener compatibilidad.  
 - Asegura que `bringToFront` y `savePositions` existan y sean accesibles globalmente.  
 - Si creas ventanas dinámicamente, añade `topbar.onpointerdown = e => startDrag(e, id)` al construir la topbar.  
