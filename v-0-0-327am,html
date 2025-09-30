@@ -1,0 +1,103 @@
+### Problemas comunes que rompen el arrastre
+
+- Funciones renombradas entre versiones (por ejemplo `arrastrarVentana` vs `startDrag`) y los atributos inline no coinciden con el nombre real de la función.  
+- No se exportaron las funciones al scope global (p. ej. `window.startDrag = startDrag`), por eso los onmousedown inline no llaman a nada.  
+- Eventos de puntero/táctil faltantes: sólo `mousedown` no funciona en móvil; hace falta `pointerdown` o manejadores táctiles.  
+- CSS que impide arrastrar: `pointer-events:none` en topbar, `touch-action` no definido, o `position` no establecido en las ventanas.  
+- z-index o posicionamiento absoluto faltante: si la ventana no es position:absolute/relative no se mueve con top/left.  
+- event.preventDefault() no usado correctamente en los manejadores, causando selección de texto o comportamiento inesperado.
+
+---
+
+### Checklist rápido para restaurar el arrastre
+
+1. Asegura que cada topbar tenga el atributo correcto que llama a la función exportada, por ejemplo:
+   - onpointerdown="startDrag(event, 'miId')"
+2. Exporta las funciones para uso inline:
+   - window.startDrag = startDrag;
+3. Asegura CSS mínimo:
+   - .ventana { position: absolute; }  
+   - .topbar { cursor: grab; touch-action: none; user-select: none; }
+4. Implementa soporte PointerEvents (más compatible con mouse y táctil).
+5. Guarda la posición y actualiza z-index al traer al frente.
+6. Comprueba consola por errores (nombre de función indefinido).
+
+---
+
+### Reemplaza tu lógica de arrastre por este bloque (copiar en OS.js)
+
+```js
+// Drag universal (Pointer Events)
+let dragData = null;
+
+function startDrag(e, id) {
+  // normaliza evento pointer
+  const evt = e.type.startsWith('touch') && e.touches ? e.touches[0] : e;
+  const el = document.getElementById(id);
+  if (!el) return;
+  bringToFront(el);
+  const rect = el.getBoundingClientRect();
+  dragData = {
+    el,
+    startX: evt.clientX,
+    startY: evt.clientY,
+    origLeft: parseFloat(rect.left) || 0,
+    origTop: parseFloat(rect.top) || 0
+  };
+  // pointer / mouse / touch listeners
+  document.addEventListener('pointermove', onDrag);
+  document.addEventListener('pointerup', stopDrag);
+  document.addEventListener('pointercancel', stopDrag);
+  // evitar comportamiento por defecto (selección)
+  e.preventDefault();
+}
+function onDrag(e) {
+  if (!dragData) return;
+  const evt = e;
+  const dx = evt.clientX - dragData.startX;
+  const dy = evt.clientY - dragData.startY;
+  dragData.el.style.left = (dragData.origLeft + dx) + 'px';
+  dragData.el.style.top  = (dragData.origTop  + dy) + 'px';
+}
+function stopDrag() {
+  if (!dragData) return;
+  document.removeEventListener('pointermove', onDrag);
+  document.removeEventListener('pointerup', stopDrag);
+  document.removeEventListener('pointercancel', stopDrag);
+  dragData = null;
+  savePositions(); // opcional: persistir
+}
+
+// Exponer para uso inline
+window.startDrag = startDrag;
+```
+
+---
+
+### Ajustes CSS recomendados
+
+```css
+.ventana { position: absolute; left: 100px; top: 100px; }
+.topbar { cursor: grab; touch-action: none; user-select: none; -webkit-user-drag: none; }
+.topbar:active { cursor: grabbing; }
+```
+
+---
+
+### Integración con tu código existente
+
+- Si antes usabas `arrastrarVentana(event, 'id')`, reemplaza los atributos HTML por `onpointerdown="startDrag(event,'id')"` o renombra la función para mantener compatibilidad.  
+- Asegura que `bringToFront` y `savePositions` existan y sean accesibles globalmente.  
+- Si creas ventanas dinámicamente, añade `topbar.onpointerdown = e => startDrag(e, id)` al construir la topbar.  
+- Para mobile: `pointer` events cubren mouse y táctil; si necesitas soporte antiguo, añade listeners `touchstart`/`touchmove`/`touchend` como fallback.
+
+---
+
+### Comprobaciones finales (rápido)
+
+- Abrir la consola del navegador: no debe haber "Uncaught ReferenceError" por nombres de funciones.  
+- Prueba en desktop y móvil (devtools modo dispositivo).  
+- Comprueba que las ventanas tengan inline style left/top actualizables.  
+- Verifica que `document.documentElement` o `body` no tengan estilos que bloqueen pointer events globales.
+
+Si quieres, te entrego una versión completa del OS.js actualizado con este arrastre ya integrado y con el binding automático cuando creas ventanas dinámicas.
